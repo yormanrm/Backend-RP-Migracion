@@ -1,0 +1,316 @@
+{
+  "info": {
+    "name": "Marketplace API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "8f3b6b1e-6a1a-4a2e-9d1a-marketplace-api"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      { "key": "token", "value": "{{token}}", "type": "string" }
+    ]
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8080" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "POST Registrar Cliente",
+          "request": {
+            "method": "POST",
+            "auth": { "type": "noauth" },
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"cliente1@test.com\",\n  \"password\": \"password123\",\n  \"firstName\": \"Ana\",\n  \"lastName\": \"Pérez\",\n  \"phone\": \"5551234567\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register/customer",
+              "host": [ "{{base_url}}" ],
+              "path": [ "auth", "register", "customer" ]
+            }
+          }
+        },
+        {
+          "name": "POST Registrar Asociado",
+          "request": {
+            "method": "POST",
+            "auth": { "type": "noauth" },
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"asociado1@test.com\",\n  \"password\": \"password123\",\n  \"firstName\": \"Luis\",\n  \"lastName\": \"Gómez\",\n  \"phone\": \"5559876543\",\n  \"storeName\": \"Tienda de Luis\",\n  \"storeSlug\": \"tienda-de-luis\",\n  \"taxId\": \"RFC123456\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register/associate",
+              "host": [ "{{base_url}}" ],
+              "path": [ "auth", "register", "associate" ]
+            }
+          }
+        },
+        {
+          "name": "POST Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set(\"token\", pm.response.json().data.accessToken);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "auth": { "type": "noauth" },
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"cliente1@test.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [ "{{base_url}}" ],
+              "path": [ "auth", "login" ]
+            }
+          }
+        },
+        {
+          "name": "GET Perfil Propio",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/profile/me",
+              "host": [ "{{base_url}}" ],
+              "path": [ "profile", "me" ]
+            }
+          }
+        },
+        {
+          "name": "PUT Actualizar Perfil Cliente",
+          "request": {
+            "method": "PUT",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Ana\",\n  \"lastName\": \"Pérez\",\n  \"phone\": \"5551234567\",\n  \"street\": \"Av. Siempre Viva 123\",\n  \"city\": \"Ciudad de México\",\n  \"state\": \"CDMX\",\n  \"postalCode\": \"01000\",\n  \"country\": \"México\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/profile/me/customer",
+              "host": [ "{{base_url}}" ],
+              "path": [ "profile", "me", "customer" ]
+            }
+          }
+        },
+        {
+          "name": "PUT Actualizar Perfil Asociado",
+          "request": {
+            "method": "PUT",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Luis\",\n  \"lastName\": \"Gómez\",\n  \"phone\": \"5559876543\",\n  \"storeName\": \"Tienda de Luis\",\n  \"taxId\": \"RFC123456\",\n  \"publicBio\": \"Vendemos artesanías locales.\",\n  \"publicContactEmail\": \"contacto@tiendadeluis.com\",\n  \"publicContactPhone\": \"5559876543\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/profile/me/associate",
+              "host": [ "{{base_url}}" ],
+              "path": [ "profile", "me", "associate" ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Catálogo",
+      "item": [
+        {
+          "name": "GET Categorías",
+          "request": {
+            "method": "GET",
+            "auth": { "type": "noauth" },
+            "url": {
+              "raw": "{{base_url}}/categories",
+              "host": [ "{{base_url}}" ],
+              "path": [ "categories" ]
+            }
+          }
+        },
+        {
+          "name": "GET Items (filtros)",
+          "request": {
+            "method": "GET",
+            "auth": { "type": "noauth" },
+            "url": {
+              "raw": "{{base_url}}/items?categorySlug=artesanias&sortBy=price_asc&page=0&size=10",
+              "host": [ "{{base_url}}" ],
+              "path": [ "items" ],
+              "query": [
+                { "key": "categorySlug", "value": "artesanias" },
+                { "key": "sortBy", "value": "price_asc" },
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET Item por slug",
+          "request": {
+            "method": "GET",
+            "auth": { "type": "noauth" },
+            "url": {
+              "raw": "{{base_url}}/items/taza-artesanal",
+              "host": [ "{{base_url}}" ],
+              "path": [ "items", "taza-artesanal" ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Asociados",
+      "item": [
+        {
+          "name": "POST Crear Item",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Taza artesanal\",\n  \"slug\": \"taza-artesanal\",\n  \"description\": \"Taza de barro hecha a mano.\",\n  \"price\": 150.00,\n  \"stock\": 20,\n  \"categoryId\": \"00000000-0000-0000-0000-000000000000\",\n  \"images\": [\"https://ejemplo.com/taza.jpg\"]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/associate/items",
+              "host": [ "{{base_url}}" ],
+              "path": [ "associate", "items" ]
+            }
+          }
+        },
+        {
+          "name": "PUT Actualizar Item",
+          "request": {
+            "method": "PUT",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Taza artesanal\",\n  \"slug\": \"taza-artesanal\",\n  \"description\": \"Taza de barro hecha a mano.\",\n  \"price\": 150.00,\n  \"stock\": 20,\n  \"categoryId\": \"00000000-0000-0000-0000-000000000000\",\n  \"images\": [\"https://ejemplo.com/taza.jpg\"]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/associate/items/{{itemId}}",
+              "host": [ "{{base_url}}" ],
+              "path": [ "associate", "items", "{{itemId}}" ]
+            }
+          }
+        },
+        {
+          "name": "DELETE Eliminar Item",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/associate/items/{{itemId}}",
+              "host": [ "{{base_url}}" ],
+              "path": [ "associate", "items", "{{itemId}}" ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Compra",
+      "item": [
+        {
+          "name": "GET Carrito",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/cart",
+              "host": [ "{{base_url}}" ],
+              "path": [ "cart" ]
+            }
+          }
+        },
+        {
+          "name": "POST Agregar al Carrito",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"itemId\": \"00000000-0000-0000-0000-000000000000\",\n  \"quantity\": 2\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/cart",
+              "host": [ "{{base_url}}" ],
+              "path": [ "cart" ]
+            }
+          }
+        },
+        {
+          "name": "PUT Actualizar Línea de Carrito",
+          "request": {
+            "method": "PUT",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"quantity\": 5 }"
+            },
+            "url": {
+              "raw": "{{base_url}}/cart/items/{{cartItemId}}",
+              "host": [ "{{base_url}}" ],
+              "path": [ "cart", "items", "{{cartItemId}}" ]
+            }
+          }
+        },
+        {
+          "name": "DELETE Vaciar Carrito",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/cart",
+              "host": [ "{{base_url}}" ],
+              "path": [ "cart" ]
+            }
+          }
+        },
+        {
+          "name": "POST Checkout",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/checkout",
+              "host": [ "{{base_url}}" ],
+              "path": [ "checkout" ]
+            }
+          }
+        },
+        {
+          "name": "GET Órdenes",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/orders",
+              "host": [ "{{base_url}}" ],
+              "path": [ "orders" ]
+            }
+          }
+        },
+        {
+          "name": "GET Orden por ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/orders/{{orderId}}",
+              "host": [ "{{base_url}}" ],
+              "path": [ "orders", "{{orderId}}" ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
