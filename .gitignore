@@ -36,3 +36,4 @@ build/
 # Configuración local e IA
 .env
 graphify-out/
+ultimasesion.md
