@@ -10,6 +10,7 @@ import com.migracion.marketplace.auth.entity.User;
 import com.migracion.marketplace.auth.repository.UserRepository;
 import com.migracion.marketplace.catalog.entity.Item;
 import com.migracion.marketplace.catalog.repository.ItemRepository;
+import com.migracion.marketplace.common.exception.ConflictOperationException;
 import com.migracion.marketplace.common.exception.ResourceNotFoundException;
 import com.migracion.marketplace.purchase.dto.AddToCartRequest;
 import com.migracion.marketplace.purchase.dto.CartResponse;
@@ -41,7 +42,15 @@ public class CartService {
     public CartResponse addItem(UUID userId, AddToCartRequest request) {
         Cart cart = findOrCreateCart(userId);
         Item item = itemRepository.findById(request.itemId())
+                .filter(Item::isActive)
                 .orElseThrow(() -> new ResourceNotFoundException("Ítem no encontrado."));
+
+        // Regla de negocio: un carrito no puede mezclar productos y servicios.
+        boolean mixesTypes = cart.getItems().stream()
+                .anyMatch(line -> line.getItem().getType() != item.getType());
+        if (mixesTypes) {
+            throw new ConflictOperationException("No se pueden combinar productos y servicios en el mismo carrito.");
+        }
 
         CartItem cartItem = cartItemRepository.findByCartIdAndItemId(cart.getId(), item.getId()).orElse(null);
         if (cartItem == null) {

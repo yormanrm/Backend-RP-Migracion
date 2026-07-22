@@ -12,4 +12,6 @@ public interface AssociateProfileRepository extends JpaRepository<AssociateProfi
     Optional<AssociateProfile> findByUserId(UUID userId);
 
     boolean existsByStoreSlug(String storeSlug);
+
+    boolean existsByRfc(String rfc);
 }

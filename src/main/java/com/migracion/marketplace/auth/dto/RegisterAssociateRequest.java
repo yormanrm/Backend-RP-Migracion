@@ -2,6 +2,7 @@ package com.migracion.marketplace.auth.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public record RegisterAssociateRequest(
@@ -11,6 +12,7 @@ public record RegisterAssociateRequest(
         @NotBlank String lastName,
         String phone,
         @NotBlank String storeName,
-        @NotBlank String storeSlug,
-        String taxId) {
+        @NotBlank @Pattern(regexp = "^([A-ZÑ&]{3,4})\\d{6}([A-Z\\d]{3})$",
+                flags = Pattern.Flag.CASE_INSENSITIVE,
+                message = "El RFC no tiene un formato válido.") String rfc) {
 }

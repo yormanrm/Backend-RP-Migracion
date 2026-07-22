@@ -20,6 +20,10 @@ app:
     # HS256 exige clave >= 32 bytes; mover a variable de entorno antes de producción.
     secret: "marketplace-dev-secret-key-2026-change-before-production-32b-min"
     expiration-minutes: 120
+  admin:
+    # Bootstrap del primer ADMIN (solo se usa si no existe ninguno). Mover a variables de entorno antes de producción.
+    email: ${ADMIN_EMAIL:admin@marketplace.local}
+    password: ${ADMIN_PASSWORD:admin12345}
 
 logging:
   file:

@@ -7,10 +7,5 @@ public record CustomerProfileResponse(
         String email,
         String firstName,
         String lastName,
-        String phone,
-        String street,
-        String city,
-        String state,
-        String postalCode,
-        String country) {
+        String phone) {
 }

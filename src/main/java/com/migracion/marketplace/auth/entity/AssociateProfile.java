@@ -3,6 +3,7 @@ package com.migracion.marketplace.auth.entity;
 import com.migracion.marketplace.common.entity.Auditable;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
@@ -33,7 +34,11 @@ public class AssociateProfile extends Auditable {
     @Column(nullable = false, unique = true)
     private String storeSlug;
 
-    private String taxId;
+    @Column(nullable = false, unique = true)
+    private String rfc;
+
+    @Embedded
+    private Address storeAddress;
 
     @Lob
     private String publicBio;

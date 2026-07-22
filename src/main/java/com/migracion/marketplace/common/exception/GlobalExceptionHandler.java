@@ -59,6 +59,18 @@ public class GlobalExceptionHandler {
         return problem(HttpStatus.FORBIDDEN, ex.getMessage());
     }
 
+    @ExceptionHandler(ConflictOperationException.class)
+    public ProblemDetail handleConflictOperation(ConflictOperationException ex, HttpServletRequest request) {
+        log.warn("409 en {} {}: {}", request.getMethod(), request.getRequestURI(), ex.getMessage());
+        return problem(HttpStatus.CONFLICT, ex.getMessage());
+    }
+
+    @ExceptionHandler(BusinessValidationException.class)
+    public ProblemDetail handleBusinessValidation(BusinessValidationException ex, HttpServletRequest request) {
+        log.warn("400 en {} {}: {}", request.getMethod(), request.getRequestURI(), ex.getMessage());
+        return problem(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ProblemDetail handleValidation(MethodArgumentNotValidException ex, HttpServletRequest request) {
         ProblemDetail detail = problem(HttpStatus.BAD_REQUEST, "Error de validación en los datos enviados.");

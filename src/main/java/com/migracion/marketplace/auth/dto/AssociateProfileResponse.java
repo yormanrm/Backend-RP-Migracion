@@ -10,7 +10,8 @@ public record AssociateProfileResponse(
         String phone,
         String storeName,
         String storeSlug,
-        String taxId,
+        String rfc,
+        AddressDto storeAddress,
         String publicBio,
         String publicContactEmail,
         String publicContactPhone) {

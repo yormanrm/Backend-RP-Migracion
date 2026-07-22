@@ -6,13 +6,20 @@
   },
   "auth": {
     "type": "bearer",
-    "bearer": [
-      { "key": "token", "value": "{{token}}", "type": "string" }
-    ]
+    "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
   },
   "variable": [
     { "key": "base_url", "value": "http://localhost:8080" },
-    { "key": "token", "value": "" }
+    { "key": "token", "value": "" },
+    { "key": "subcategory_id", "value": "" },
+    { "key": "category_id", "value": "" },
+    { "key": "brand_id", "value": "" },
+    { "key": "item_id", "value": "" },
+    { "key": "item_slug", "value": "" },
+    { "key": "cart_item_id", "value": "" },
+    { "key": "order_id", "value": "" },
+    { "key": "address_id", "value": "" },
+    { "key": "user_id", "value": "" }
   ],
   "item": [
     {
@@ -23,16 +30,12 @@
           "request": {
             "method": "POST",
             "auth": { "type": "noauth" },
-            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"email\": \"cliente1@test.com\",\n  \"password\": \"password123\",\n  \"firstName\": \"Ana\",\n  \"lastName\": \"Pérez\",\n  \"phone\": \"5551234567\"\n}"
             },
-            "url": {
-              "raw": "{{base_url}}/auth/register/customer",
-              "host": [ "{{base_url}}" ],
-              "path": [ "auth", "register", "customer" ]
-            }
+            "url": { "raw": "{{base_url}}/auth/register/customer", "host": ["{{base_url}}"], "path": ["auth", "register", "customer"] }
           }
         },
         {
@@ -40,16 +43,24 @@
           "request": {
             "method": "POST",
             "auth": { "type": "noauth" },
-            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"asociado1@test.com\",\n  \"password\": \"password123\",\n  \"firstName\": \"Luis\",\n  \"lastName\": \"Gómez\",\n  \"phone\": \"5559876543\",\n  \"storeName\": \"Tienda de Luis\",\n  \"storeSlug\": \"tienda-de-luis\",\n  \"taxId\": \"RFC123456\"\n}"
+              "raw": "{\n  \"email\": \"asociado1@test.com\",\n  \"password\": \"password123\",\n  \"firstName\": \"Luis\",\n  \"lastName\": \"Gómez\",\n  \"phone\": \"5559876543\",\n  \"storeName\": \"Tienda de Luis\",\n  \"rfc\": \"GOML850101AB1\"\n}"
             },
-            "url": {
-              "raw": "{{base_url}}/auth/register/associate",
-              "host": [ "{{base_url}}" ],
-              "path": [ "auth", "register", "associate" ]
-            }
+            "url": { "raw": "{{base_url}}/auth/register/associate", "host": ["{{base_url}}"], "path": ["auth", "register", "associate"] }
+          }
+        },
+        {
+          "name": "POST Registrar Admin (solo ADMIN)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin2@test.com\",\n  \"password\": \"password123\",\n  \"firstName\": \"Marta\",\n  \"lastName\": \"Ruiz\",\n  \"phone\": \"5550001111\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/auth/register/admin", "host": ["{{base_url}}"], "path": ["auth", "register", "admin"] }
           }
         },
         {
@@ -59,255 +70,488 @@
               "listen": "test",
               "script": {
                 "type": "text/javascript",
-                "exec": [
-                  "pm.collectionVariables.set(\"token\", pm.response.json().data.accessToken);"
-                ]
+                "exec": ["pm.collectionVariables.set(\"token\", pm.response.json().data.accessToken);"]
               }
             }
           ],
           "request": {
             "method": "POST",
             "auth": { "type": "noauth" },
-            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"email\": \"cliente1@test.com\",\n  \"password\": \"password123\"\n}"
             },
-            "url": {
-              "raw": "{{base_url}}/auth/login",
-              "host": [ "{{base_url}}" ],
-              "path": [ "auth", "login" ]
-            }
+            "url": { "raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth", "login"] }
           }
-        },
+        }
+      ]
+    },
+    {
+      "name": "Perfil",
+      "item": [
         {
           "name": "GET Perfil Propio",
           "request": {
             "method": "GET",
-            "url": {
-              "raw": "{{base_url}}/profile/me",
-              "host": [ "{{base_url}}" ],
-              "path": [ "profile", "me" ]
-            }
+            "url": { "raw": "{{base_url}}/profile/me", "host": ["{{base_url}}"], "path": ["profile", "me"] }
           }
         },
         {
           "name": "PUT Actualizar Perfil Cliente",
           "request": {
             "method": "PUT",
-            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"firstName\": \"Ana\",\n  \"lastName\": \"Pérez\",\n  \"phone\": \"5551234567\",\n  \"street\": \"Av. Siempre Viva 123\",\n  \"city\": \"Ciudad de México\",\n  \"state\": \"CDMX\",\n  \"postalCode\": \"01000\",\n  \"country\": \"México\"\n}"
+              "raw": "{\n  \"firstName\": \"Ana\",\n  \"lastName\": \"Pérez\",\n  \"phone\": \"5551234567\"\n}"
             },
-            "url": {
-              "raw": "{{base_url}}/profile/me/customer",
-              "host": [ "{{base_url}}" ],
-              "path": [ "profile", "me", "customer" ]
-            }
+            "url": { "raw": "{{base_url}}/profile/me/customer", "host": ["{{base_url}}"], "path": ["profile", "me", "customer"] }
           }
         },
         {
           "name": "PUT Actualizar Perfil Asociado",
           "request": {
             "method": "PUT",
-            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"firstName\": \"Luis\",\n  \"lastName\": \"Gómez\",\n  \"phone\": \"5559876543\",\n  \"storeName\": \"Tienda de Luis\",\n  \"taxId\": \"RFC123456\",\n  \"publicBio\": \"Vendemos artesanías locales.\",\n  \"publicContactEmail\": \"contacto@tiendadeluis.com\",\n  \"publicContactPhone\": \"5559876543\"\n}"
+              "raw": "{\n  \"firstName\": \"Luis\",\n  \"lastName\": \"Gómez\",\n  \"phone\": \"5559876543\",\n  \"storeName\": \"Tienda de Luis\",\n  \"storeAddress\": {\n    \"street\": \"Calle Comercio 45\",\n    \"city\": \"Guadalajara\",\n    \"state\": \"Jalisco\",\n    \"postalCode\": \"44100\",\n    \"country\": \"México\"\n  },\n  \"publicBio\": \"Vendemos artesanías locales.\",\n  \"publicContactEmail\": \"contacto@tiendadeluis.com\",\n  \"publicContactPhone\": \"5559876543\"\n}"
             },
-            "url": {
-              "raw": "{{base_url}}/profile/me/associate",
-              "host": [ "{{base_url}}" ],
-              "path": [ "profile", "me", "associate" ]
-            }
+            "url": { "raw": "{{base_url}}/profile/me/associate", "host": ["{{base_url}}"], "path": ["profile", "me", "associate"] }
+          }
+        },
+        {
+          "name": "GET Mis Direcciones",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/profile/me/addresses", "host": ["{{base_url}}"], "path": ["profile", "me", "addresses"] }
+          }
+        },
+        {
+          "name": "POST Agregar Dirección",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"street\": \"Av. Siempre Viva 123\",\n  \"city\": \"Ciudad de México\",\n  \"state\": \"CDMX\",\n  \"postalCode\": \"01000\",\n  \"country\": \"México\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/profile/me/addresses", "host": ["{{base_url}}"], "path": ["profile", "me", "addresses"] }
+          }
+        },
+        {
+          "name": "PUT Editar Dirección",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"street\": \"Av. Reforma 500\",\n  \"city\": \"Ciudad de México\",\n  \"state\": \"CDMX\",\n  \"postalCode\": \"06600\",\n  \"country\": \"México\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/profile/me/addresses/{{address_id}}", "host": ["{{base_url}}"], "path": ["profile", "me", "addresses", "{{address_id}}"] }
+          }
+        },
+        {
+          "name": "PUT Marcar Dirección Predeterminada",
+          "request": {
+            "method": "PUT",
+            "url": { "raw": "{{base_url}}/profile/me/addresses/{{address_id}}/default", "host": ["{{base_url}}"], "path": ["profile", "me", "addresses", "{{address_id}}", "default"] }
+          }
+        },
+        {
+          "name": "DELETE Eliminar Dirección",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{base_url}}/profile/me/addresses/{{address_id}}", "host": ["{{base_url}}"], "path": ["profile", "me", "addresses", "{{address_id}}"] }
           }
         }
       ]
     },
     {
-      "name": "Catálogo",
+      "name": "Catálogo Público",
       "item": [
         {
-          "name": "GET Categorías",
+          "name": "GET Categorías (con subcategorías)",
+          "request": {
+            "method": "GET",
+            "auth": { "type": "noauth" },
+            "url": { "raw": "{{base_url}}/categories", "host": ["{{base_url}}"], "path": ["categories"] }
+          }
+        },
+        {
+          "name": "GET Subcategoría por Id",
+          "request": {
+            "method": "GET",
+            "auth": { "type": "noauth" },
+            "url": { "raw": "{{base_url}}/subcategories/{{subcategory_id}}", "host": ["{{base_url}}"], "path": ["subcategories", "{{subcategory_id}}"] }
+          }
+        },
+        {
+          "name": "GET Marcas (con búsqueda opcional)",
           "request": {
             "method": "GET",
             "auth": { "type": "noauth" },
             "url": {
-              "raw": "{{base_url}}/categories",
-              "host": [ "{{base_url}}" ],
-              "path": [ "categories" ]
+              "raw": "{{base_url}}/brands?q=",
+              "host": ["{{base_url}}"],
+              "path": ["brands"],
+              "query": [{ "key": "q", "value": "", "description": "Opcional: búsqueda parcial por nombre" }]
             }
           }
         },
         {
-          "name": "GET Items (filtros)",
+          "name": "GET Marca por Id",
+          "request": {
+            "method": "GET",
+            "auth": { "type": "noauth" },
+            "url": { "raw": "{{base_url}}/brands/{{brand_id}}", "host": ["{{base_url}}"], "path": ["brands", "{{brand_id}}"] }
+          }
+        },
+        {
+          "name": "GET Items (todo, paginado)",
           "request": {
             "method": "GET",
             "auth": { "type": "noauth" },
             "url": {
-              "raw": "{{base_url}}/items?categorySlug=artesanias&sortBy=price_asc&page=0&size=10",
-              "host": [ "{{base_url}}" ],
-              "path": [ "items" ],
+              "raw": "{{base_url}}/items?page=0&size=20",
+              "host": ["{{base_url}}"],
+              "path": ["items"],
               "query": [
-                { "key": "categorySlug", "value": "artesanias" },
-                { "key": "sortBy", "value": "price_asc" },
                 { "key": "page", "value": "0" },
-                { "key": "size", "value": "10" }
+                { "key": "size", "value": "20" }
               ]
             }
           }
         },
         {
-          "name": "GET Item por slug",
+          "name": "POST Buscar Items (buscador universal)",
+          "request": {
+            "method": "POST",
+            "auth": { "type": "noauth" },
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"q\": \"taladro\",\n  \"subcategoryId\": null,\n  \"brandId\": null,\n  \"type\": null,\n  \"priceMin\": null,\n  \"priceMax\": null,\n  \"sortBy\": \"recent\",\n  \"page\": 0,\n  \"size\": 20\n}"
+            },
+            "url": { "raw": "{{base_url}}/items/search", "host": ["{{base_url}}"], "path": ["items", "search"] }
+          }
+        },
+        {
+          "name": "GET Item por Slug",
           "request": {
             "method": "GET",
             "auth": { "type": "noauth" },
-            "url": {
-              "raw": "{{base_url}}/items/taza-artesanal",
-              "host": [ "{{base_url}}" ],
-              "path": [ "items", "taza-artesanal" ]
-            }
+            "url": { "raw": "{{base_url}}/items/{{item_slug}}", "host": ["{{base_url}}"], "path": ["items", "{{item_slug}}"] }
           }
         }
       ]
     },
     {
-      "name": "Asociados",
+      "name": "Admin",
       "item": [
         {
-          "name": "POST Crear Item",
+          "name": "POST Crear Categoría",
           "request": {
             "method": "POST",
-            "header": [ { "key": "Content-Type", "value": "application/json" } ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"title\": \"Taza artesanal\",\n  \"slug\": \"taza-artesanal\",\n  \"description\": \"Taza de barro hecha a mano.\",\n  \"price\": 150.00,\n  \"stock\": 20,\n  \"categoryId\": \"00000000-0000-0000-0000-000000000000\",\n  \"images\": [\"https://ejemplo.com/taza.jpg\"]\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/associate/items",
-              "host": [ "{{base_url}}" ],
-              "path": [ "associate", "items" ]
-            }
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Electrónica\"\n}" },
+            "url": { "raw": "{{base_url}}/categories", "host": ["{{base_url}}"], "path": ["categories"] }
           }
         },
         {
-          "name": "PUT Actualizar Item",
+          "name": "PUT Editar Categoría",
           "request": {
             "method": "PUT",
-            "header": [ { "key": "Content-Type", "value": "application/json" } ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"title\": \"Taza artesanal\",\n  \"slug\": \"taza-artesanal\",\n  \"description\": \"Taza de barro hecha a mano.\",\n  \"price\": 150.00,\n  \"stock\": 20,\n  \"categoryId\": \"00000000-0000-0000-0000-000000000000\",\n  \"images\": [\"https://ejemplo.com/taza.jpg\"]\n}"
-            },
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Electrónica y Tecnología\"\n}" },
+            "url": { "raw": "{{base_url}}/categories/{{category_id}}", "host": ["{{base_url}}"], "path": ["categories", "{{category_id}}"] }
+          }
+        },
+        {
+          "name": "DELETE Categoría (borrado lógico)",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{base_url}}/categories/{{category_id}}", "host": ["{{base_url}}"], "path": ["categories", "{{category_id}}"] }
+          }
+        },
+        {
+          "name": "POST Crear Subcategoría",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Celulares\",\n  \"categoryId\": \"{{category_id}}\"\n}" },
+            "url": { "raw": "{{base_url}}/subcategories", "host": ["{{base_url}}"], "path": ["subcategories"] }
+          }
+        },
+        {
+          "name": "PUT Editar Subcategoría",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Smartphones\",\n  \"categoryId\": \"{{category_id}}\"\n}" },
+            "url": { "raw": "{{base_url}}/subcategories/{{subcategory_id}}", "host": ["{{base_url}}"], "path": ["subcategories", "{{subcategory_id}}"] }
+          }
+        },
+        {
+          "name": "DELETE Subcategoría (borrado lógico)",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{base_url}}/subcategories/{{subcategory_id}}", "host": ["{{base_url}}"], "path": ["subcategories", "{{subcategory_id}}"] }
+          }
+        },
+        {
+          "name": "PUT Renombrar Marca",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Marca Corregida\"\n}" },
+            "url": { "raw": "{{base_url}}/brands/{{brand_id}}", "host": ["{{base_url}}"], "path": ["brands", "{{brand_id}}"] }
+          }
+        },
+        {
+          "name": "DELETE Marca (borrado lógico)",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{base_url}}/brands/{{brand_id}}", "host": ["{{base_url}}"], "path": ["brands", "{{brand_id}}"] }
+          }
+        },
+        {
+          "name": "GET Usuarios",
+          "request": {
+            "method": "GET",
             "url": {
-              "raw": "{{base_url}}/associate/items/{{itemId}}",
-              "host": [ "{{base_url}}" ],
-              "path": [ "associate", "items", "{{itemId}}" ]
+              "raw": "{{base_url}}/admin/users?page=0&size=20",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "users"],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
             }
           }
         },
         {
-          "name": "DELETE Eliminar Item",
+          "name": "PUT Activar/Desactivar Usuario",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"active\": false\n}" },
+            "url": { "raw": "{{base_url}}/admin/users/{{user_id}}/status", "host": ["{{base_url}}"], "path": ["admin", "users", "{{user_id}}", "status"] }
+          }
+        },
+        {
+          "name": "GET Items (catálogo global, incluye inactivos)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/admin/items?page=0&size=20",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "items"],
+              "query": [
+                { "key": "type", "value": "", "description": "Opcional: PRODUCT | SERVICE", "disabled": true },
+                { "key": "active", "value": "", "description": "Opcional: true | false", "disabled": true },
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "PUT Activar/Desactivar Item",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"active\": true\n}" },
+            "url": { "raw": "{{base_url}}/admin/items/{{item_id}}/status", "host": ["{{base_url}}"], "path": ["admin", "items", "{{item_id}}", "status"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inventario Asociado",
+      "item": [
+        {
+          "name": "GET Mi Inventario (incluye inactivos)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/associate/items?page=0&size=20",
+              "host": ["{{base_url}}"],
+              "path": ["associate", "items"],
+              "query": [
+                { "key": "type", "value": "", "description": "Opcional: PRODUCT | SERVICE", "disabled": true },
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST Crear Producto",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Taladro Inalámbrico 20V\",\n  \"description\": \"Taladro con 2 baterías y maletín.\",\n  \"type\": \"PRODUCT\",\n  \"price\": 1499.00,\n  \"stock\": 25,\n  \"sku\": \"TAL-20V-001\",\n  \"model\": \"DCD777C2\",\n  \"brandName\": \"DeWalt\",\n  \"subcategoryId\": \"{{subcategory_id}}\",\n  \"images\": [\"https://example.com/taladro.jpg\"]\n}"
+            },
+            "url": { "raw": "{{base_url}}/associate/items", "host": ["{{base_url}}"], "path": ["associate", "items"] }
+          }
+        },
+        {
+          "name": "POST Crear Servicio",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Instalación Eléctrica Residencial\",\n  \"description\": \"Instalación y reparación de cableado.\",\n  \"type\": \"SERVICE\",\n  \"price\": 999.00,\n  \"subcategoryId\": \"{{subcategory_id}}\",\n  \"durationValue\": 3,\n  \"durationUnit\": \"HORAS\",\n  \"serviceMode\": \"PRESENCIAL\",\n  \"coverageZone\": \"Ciudad de México y área metropolitana\",\n  \"images\": []\n}"
+            },
+            "url": { "raw": "{{base_url}}/associate/items", "host": ["{{base_url}}"], "path": ["associate", "items"] }
+          }
+        },
+        {
+          "name": "PUT Editar Item",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Taladro Inalámbrico 20V MAX\",\n  \"description\": \"Taladro con 2 baterías, cargador y maletín.\",\n  \"type\": \"PRODUCT\",\n  \"price\": 1399.00,\n  \"stock\": 30,\n  \"sku\": \"TAL-20V-001\",\n  \"model\": \"DCD777C2\",\n  \"brandName\": \"DeWalt\",\n  \"subcategoryId\": \"{{subcategory_id}}\",\n  \"images\": [\"https://example.com/taladro.jpg\"]\n}"
+            },
+            "url": { "raw": "{{base_url}}/associate/items/{{item_id}}", "host": ["{{base_url}}"], "path": ["associate", "items", "{{item_id}}"] }
+          }
+        },
+        {
+          "name": "PUT Reactivar/Desactivar Item Propio",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"active\": true\n}" },
+            "url": { "raw": "{{base_url}}/associate/items/{{item_id}}/status", "host": ["{{base_url}}"], "path": ["associate", "items", "{{item_id}}", "status"] }
+          }
+        },
+        {
+          "name": "DELETE Item (borrado lógico)",
           "request": {
             "method": "DELETE",
+            "url": { "raw": "{{base_url}}/associate/items/{{item_id}}", "host": ["{{base_url}}"], "path": ["associate", "items", "{{item_id}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Órdenes Asociado",
+      "item": [
+        {
+          "name": "GET Mis Sub-órdenes",
+          "request": {
+            "method": "GET",
             "url": {
-              "raw": "{{base_url}}/associate/items/{{itemId}}",
-              "host": [ "{{base_url}}" ],
-              "path": [ "associate", "items", "{{itemId}}" ]
+              "raw": "{{base_url}}/associate/orders?page=0&size=20",
+              "host": ["{{base_url}}"],
+              "path": ["associate", "orders"],
+              "query": [
+                { "key": "status", "value": "", "description": "Opcional: PAID | PROCESSING | COMPLETED | CANCELLED", "disabled": true },
+                { "key": "from", "value": "", "description": "Opcional: yyyy-MM-dd", "disabled": true },
+                { "key": "to", "value": "", "description": "Opcional: yyyy-MM-dd", "disabled": true },
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "PUT Avanzar Estado de Sub-orden",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"PROCESSING\"\n}" },
+            "url": { "raw": "{{base_url}}/associate/orders/{{order_id}}/status", "host": ["{{base_url}}"], "path": ["associate", "orders", "{{order_id}}", "status"] }
+          }
+        },
+        {
+          "name": "GET Reporte de Ventas",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/associate/sales-report",
+              "host": ["{{base_url}}"],
+              "path": ["associate", "sales-report"],
+              "query": [
+                { "key": "from", "value": "", "description": "Opcional: yyyy-MM-dd (sin rango = histórico)", "disabled": true },
+                { "key": "to", "value": "", "description": "Opcional: yyyy-MM-dd", "disabled": true }
+              ]
             }
           }
         }
       ]
     },
     {
-      "name": "Compra",
+      "name": "Carrito y Checkout",
       "item": [
         {
           "name": "GET Carrito",
           "request": {
             "method": "GET",
-            "url": {
-              "raw": "{{base_url}}/cart",
-              "host": [ "{{base_url}}" ],
-              "path": [ "cart" ]
-            }
+            "url": { "raw": "{{base_url}}/cart", "host": ["{{base_url}}"], "path": ["cart"] }
           }
         },
         {
           "name": "POST Agregar al Carrito",
           "request": {
             "method": "POST",
-            "header": [ { "key": "Content-Type", "value": "application/json" } ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"itemId\": \"00000000-0000-0000-0000-000000000000\",\n  \"quantity\": 2\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/cart",
-              "host": [ "{{base_url}}" ],
-              "path": [ "cart" ]
-            }
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"itemId\": \"{{item_id}}\",\n  \"quantity\": 2\n}" },
+            "url": { "raw": "{{base_url}}/cart", "host": ["{{base_url}}"], "path": ["cart"] }
           }
         },
         {
           "name": "PUT Actualizar Línea de Carrito",
           "request": {
             "method": "PUT",
-            "header": [ { "key": "Content-Type", "value": "application/json" } ],
-            "body": {
-              "mode": "raw",
-              "raw": "{ \"quantity\": 5 }"
-            },
-            "url": {
-              "raw": "{{base_url}}/cart/items/{{cartItemId}}",
-              "host": [ "{{base_url}}" ],
-              "path": [ "cart", "items", "{{cartItemId}}" ]
-            }
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"quantity\": 3\n}" },
+            "url": { "raw": "{{base_url}}/cart/items/{{cart_item_id}}", "host": ["{{base_url}}"], "path": ["cart", "items", "{{cart_item_id}}"] }
           }
         },
         {
           "name": "DELETE Vaciar Carrito",
           "request": {
             "method": "DELETE",
-            "url": {
-              "raw": "{{base_url}}/cart",
-              "host": [ "{{base_url}}" ],
-              "path": [ "cart" ]
-            }
+            "url": { "raw": "{{base_url}}/cart", "host": ["{{base_url}}"], "path": ["cart"] }
           }
         },
         {
           "name": "POST Checkout",
           "request": {
             "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"addressId\": null\n}"
+            },
+            "url": { "raw": "{{base_url}}/checkout", "host": ["{{base_url}}"], "path": ["checkout"] }
+          }
+        },
+        {
+          "name": "GET Mis Órdenes",
+          "request": {
+            "method": "GET",
             "url": {
-              "raw": "{{base_url}}/checkout",
-              "host": [ "{{base_url}}" ],
-              "path": [ "checkout" ]
+              "raw": "{{base_url}}/orders?sort=recent",
+              "host": ["{{base_url}}"],
+              "path": ["orders"],
+              "query": [{ "key": "sort", "value": "recent", "description": "recent | oldest" }]
             }
           }
         },
         {
-          "name": "GET Órdenes",
+          "name": "GET Orden por Id",
           "request": {
             "method": "GET",
-            "url": {
-              "raw": "{{base_url}}/orders",
-              "host": [ "{{base_url}}" ],
-              "path": [ "orders" ]
-            }
-          }
-        },
-        {
-          "name": "GET Orden por ID",
-          "request": {
-            "method": "GET",
-            "url": {
-              "raw": "{{base_url}}/orders/{{orderId}}",
-              "host": [ "{{base_url}}" ],
-              "path": [ "orders", "{{orderId}}" ]
-            }
+            "url": { "raw": "{{base_url}}/orders/{{order_id}}", "host": ["{{base_url}}"], "path": ["orders", "{{order_id}}"] }
           }
         }
       ]

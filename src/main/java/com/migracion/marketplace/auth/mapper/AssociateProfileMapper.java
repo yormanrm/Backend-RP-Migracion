@@ -20,7 +20,8 @@ public interface AssociateProfileMapper {
     @Mapping(target = "phone", source = "user.phone")
     @Mapping(target = "storeName", source = "profile.storeName")
     @Mapping(target = "storeSlug", source = "profile.storeSlug")
-    @Mapping(target = "taxId", source = "profile.taxId")
+    @Mapping(target = "rfc", source = "profile.rfc")
+    @Mapping(target = "storeAddress", source = "profile.storeAddress")
     @Mapping(target = "publicBio", source = "profile.publicBio")
     @Mapping(target = "publicContactEmail", source = "profile.publicContactEmail")
     @Mapping(target = "publicContactPhone", source = "profile.publicContactPhone")
@@ -28,6 +29,7 @@ public interface AssociateProfileMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "storeSlug", ignore = true)
+    @Mapping(target = "rfc", ignore = true)
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)

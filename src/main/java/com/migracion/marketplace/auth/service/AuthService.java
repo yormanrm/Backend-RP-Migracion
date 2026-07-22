@@ -16,6 +16,7 @@ import com.migracion.marketplace.auth.repository.AssociateProfileRepository;
 import com.migracion.marketplace.auth.repository.UserRepository;
 import com.migracion.marketplace.common.exception.DuplicateResourceException;
 import com.migracion.marketplace.common.security.JwtService;
+import com.migracion.marketplace.common.util.SlugGenerator;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,6 +29,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final SlugGenerator slugGenerator;
 
     public LoginResponse registerCustomer(RegisterCustomerRequest request) {
         if (userRepository.existsByEmail(request.email())) {
@@ -49,8 +51,9 @@ public class AuthService {
         if (userRepository.existsByEmail(request.email())) {
             throw new DuplicateResourceException("Ya existe una cuenta con el email: " + request.email());
         }
-        if (associateProfileRepository.existsByStoreSlug(request.storeSlug())) {
-            throw new DuplicateResourceException("Ya existe una tienda con el slug: " + request.storeSlug());
+        String rfc = request.rfc().trim().toUpperCase();
+        if (associateProfileRepository.existsByRfc(rfc)) {
+            throw new DuplicateResourceException("Ya existe un asociado registrado con el RFC: " + rfc);
         }
         User user = User.builder()
                 .email(request.email())
@@ -65,11 +68,27 @@ public class AuthService {
         AssociateProfile profile = AssociateProfile.builder()
                 .user(user)
                 .storeName(request.storeName())
-                .storeSlug(request.storeSlug())
-                .taxId(request.taxId())
+                .storeSlug(generateStoreSlug(request.storeName()))
+                .rfc(rfc)
                 .build();
         associateProfileRepository.save(profile);
 
+        return issueToken(user);
+    }
+
+    public LoginResponse registerAdmin(RegisterCustomerRequest request) {
+        if (userRepository.existsByEmail(request.email())) {
+            throw new DuplicateResourceException("Ya existe una cuenta con el email: " + request.email());
+        }
+        User user = User.builder()
+                .email(request.email())
+                .passwordHash(passwordEncoder.encode(request.password()))
+                .role(Role.ADMIN)
+                .firstName(request.firstName())
+                .lastName(request.lastName())
+                .phone(request.phone())
+                .build();
+        userRepository.save(user);
         return issueToken(user);
     }
 
@@ -79,6 +98,14 @@ public class AuthService {
         User user = userRepository.findByEmail(request.email())
                 .orElseThrow(() -> new IllegalStateException("Usuario autenticado no encontrado."));
         return issueToken(user);
+    }
+
+    private String generateStoreSlug(String storeName) {
+        String slug = slugGenerator.toSlug(storeName);
+        while (associateProfileRepository.existsByStoreSlug(slug)) {
+            slug = slugGenerator.toSlug(storeName) + "-" + slugGenerator.randomSuffix();
+        }
+        return slug;
     }
 
     private LoginResponse issueToken(User user) {

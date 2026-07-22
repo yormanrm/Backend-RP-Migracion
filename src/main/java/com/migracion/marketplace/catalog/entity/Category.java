@@ -23,6 +23,7 @@ public class Category extends Auditable {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false, unique = true)
-    private String slug;
+    @Column(nullable = false)
+    @Builder.Default
+    private boolean active = true;
 }

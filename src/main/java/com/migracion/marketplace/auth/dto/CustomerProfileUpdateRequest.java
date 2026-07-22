@@ -5,10 +5,5 @@ import jakarta.validation.constraints.NotBlank;
 public record CustomerProfileUpdateRequest(
         @NotBlank String firstName,
         @NotBlank String lastName,
-        String phone,
-        String street,
-        String city,
-        String state,
-        String postalCode,
-        String country) {
+        String phone) {
 }

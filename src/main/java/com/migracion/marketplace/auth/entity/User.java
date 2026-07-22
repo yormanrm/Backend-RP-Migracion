@@ -3,7 +3,6 @@ package com.migracion.marketplace.auth.entity;
 import com.migracion.marketplace.common.entity.Auditable;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -41,6 +40,7 @@ public class User extends Auditable {
 
     private String phone;
 
-    @Embedded
-    private Address shippingAddress;
+    @Column(nullable = false)
+    @Builder.Default
+    private boolean active = true;
 }
